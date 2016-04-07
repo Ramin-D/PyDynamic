@@ -57,7 +57,19 @@ class Node:
         next_node.make_permanent()
         return next_node,temp_min_cost     
     
-
+class Net:
+    """A network of connected nodes"""
+    def __init__(self,*nodes):
+        self.nodes=list(nodes)
+    
+    def start(self,start_index):
+        start_node=self.nodes[start_index]
+        start_node.make_permanent()
+        start_node.total_cost=0
+        find_shortest_path(start_node)
+    def results(self):
+        return self.nodes
+    
 def find_shortest_path(node):
     """Finds shortest path from node to it's neighbors"""
     next_node,next_min_cost=node.get_min_cost_neighbor()
@@ -75,7 +87,6 @@ def main():
     node_5=Node('n_5')
     node_6=Node('n_6')
     
-    nodes=[node_1,node_2,node_3,node_4,node_5,node_6]
     #a net example
     #(node_a:3) means it has a path to node_a with weight 3
     node_1.neighbors.update({node_2:7,node_3:9,node_6:14})
@@ -84,14 +95,12 @@ def main():
     node_4.neighbors.update({node_5:6})
     node_6.neighbors.update({node_5:9})
     
-    node_1.make_permanent()
-    node_1.total_cost=0
-    
-    #start algorithm
-    find_shortest_path(node_1)
+    net=Net(node_1,node_2,node_3,node_4,node_5,node_6)
+    net.start(0)
+    results=net.results()
     
     #print all path after solution has been completed
-    for n in nodes:
+    for n in results:
         if n.from_node:
             print(n.name+" <<--- "+n.from_node.name)
 
